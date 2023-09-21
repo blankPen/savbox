@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inbox</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/dompurify/3.0.2/purify.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+    <style>
+      .page {
+        /* background: #121212; */
+        height: 100vh;
+      }
+      .bookmark {
+        --color-aura-deeper: #3c3c3e;
+
+        background-color: rgba(32, 32, 33, 1);
+        border-color: var(--color-aura-deeper);
+        color: rgb(210, 220, 236);
+      }
+
+      .cover {
+        width: 80px;
+        height: 80px;
+        margin-top: 30px;
+      }
+      .bar {
+        color: rgba(145, 156, 173, 1);
+        background-color: rgba(38, 38, 38, 1);
+      }
+    </style>
+  </head>
+  <body class="dark:bg-slate-900">
+    <header>
+      <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mt-8">
+          <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
+            收集箱
+          </h1>
+        </div>
+      </div>
+    </header>
+    <div class="page p-4">
+      <div
+        id="container"
+        class="grid grid-cols-1 md:grid-cols-4 gap-4 pb-1"
+      ></div>
+    </div>
+    <template id="template2">
+      <article
+        class="rounded-lg border border-gray-100 bg-white p-4 shadow-sm transition hover:shadow-lg dark:border-gray-800 dark:bg-gray-900 dark:shadow-gray-700/25 sm:p-6"
+      >
+        <a href="#">
+          <h3 class="mt-0.5 text-lg font-medium text-gray-900 dark:text-white">
+            {title}
+          </h3>
+        </a>
+
+        <p
+          class="mt-2 line-clamp-3 text-sm/relaxed text-gray-500 dark:text-gray-400"
+        >
+          {desc}
+        </p>
+
+        <a
+          href="#"
+          class="group mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-600"
+        >
+          Find out more
+
+          <span
+            aria-hidden="true"
+            class="block transition-all group-hover:ms-0.5 rtl:rotate-180"
+          >
+            &rarr;
+          </span>
+        </a>
+      </article>
+    </template>
+    <template id="template">
+      <a
+        href="{url}"
+        target="_blank"
+        class="bookmark rounded-md overflow-hidden block"
+      >
+        <div class="content p-4 pb-2.5 flex flex-auto">
+          <div class="flex-1">
+            <h2
+              class="text-base text-label-heavy dark:text-label-heavy-dark mb-1.5 line-clamp-2"
+            >
+              {title}
+            </h2>
+            <div
+              class="text-xs text-label-normal dark:text-label-normal-dark mb-0 line-clamp-3"
+            >
+              {desc}
+            </div>
+          </div>
+          <img
+            class="ml-3 flex-shrink-0 rounded overflow-hidden cover object-cover"
+            src="{banner}"
+          />
+        </div>
+        <div class="bar h-8 px-4 flex items-center">
+          <span class="leading-4">{host}</span>
+        </div>
+      </a>
+    </template>
+    <script>
+      async function fetchApi() {
+        return fetch(
+          "https://images-1318918047.cos.ap-beijing.myqcloud.com/post/list.json"
+        ).then((res) => res.json());
+      }
+
+      async function init() {
+        const list = await fetchApi();
+
+        const container = document.querySelector("#container");
+        const temp = document.querySelector("#template2");
+
+        list.forEach((v) => {
+          v.host = new URL(v.originUrl).host;
+
+          const f = document.createElement("div");
+          f.innerHTML = temp.innerHTML.trim().replace(/{(.+)}/g, (_, k) => {
+            return DOMPurify.sanitize(v[k]) || _;
+          });
+          const item = f.firstChild;
+          container.appendChild(item);
+        });
+      }
+      init();
+    </script>
+  </body>
+</html>

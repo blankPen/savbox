@@ -1,0 +1,17 @@
+{
+  "name": "@sav/collect",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "minimatch": "^9.0.2",
+    "style-to-object": "^0.4.1"
+  }
+}

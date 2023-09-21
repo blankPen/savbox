@@ -1,0 +1,19 @@
+#chrome-extension-snapshot-root {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  width: 330px;
+  //   min-height: 54px;
+
+  max-height: calc(100vh - 40px);
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  pointer-events: initial;
+  z-index: 2147483647;
+  animation: 0.2s ease 0s 1 normal none running slideup;
+  color-scheme: light;
+  transition: height 200ms, width 200ms;
+}
